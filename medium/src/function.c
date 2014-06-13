@@ -8,7 +8,7 @@
  */
 #include <string.h>
 
-#include "c_program_template.h"
+#include "dep.h"
 
 /*!
  * Return a "Hello World!" message.

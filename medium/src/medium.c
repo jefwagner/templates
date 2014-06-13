@@ -7,9 +7,10 @@
  * Long file description.
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include "c_program_template.h"
+#include "dep.h"
 
 /*!
  * Short description.
@@ -36,10 +37,10 @@ int main( int argc, char **argv){
   }
   n = atoi( argv[1]);
 
-  m = get_message;
+  m = get_message();
   for( i=0; i<n; i++){
-    if( m.is_valid = yes ){
-      printf( "%s", m.message)
+    if( m.is_valid == yes ){
+      printf( "%s", m.message);
     }
   }
 

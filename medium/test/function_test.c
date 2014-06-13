@@ -7,8 +7,9 @@
  * Long file description.
  */
 #include <stdio.h>
+#include <string.h>
 
-#include "c_programe_template.c"
+#include "../src/function.c"
 
 /*!
  * get_message test.
@@ -17,14 +18,14 @@
  * valid, and confirms that it matches the expected "Hello World!"
  */
 void get_message_test(){
-  int status;
-  message m;
+  int status = 0;
+  message m = get_message();
+
   fprintf( stdout, "Testing get_message: ");
-  m = get_message();
-  if( m.is_valid == yes ){
+  if( m.is_valid != yes ){
     status++;
   }
-  if( strcmp( m.message, "Hello World!\n")){
+  if( strcmp( m.message, "Hello World!\n") != 0 ){
     status++;
   }
   if( status == 0){

@@ -1,28 +1,29 @@
-########################################################################
+######################################################################
 # General Makefile
 #
 # This is a general makefile for a c project. You need to fill in the
 # program name, the source files, and the dependency (header or
 # resource) files. It should work with very minor changes in the
 # pattern substitution for c++ and fortran files.
-########################################################################
+######################################################################
 # Name of the program
 PROGRAM = medium
-# A list of the source files
-SRCS = medium.c \
-       function.c
-# A list of the dependencies
-DEPS = function_test.h 
 
 # Directory names for sources, objects, ect.
-ODIR = obj
 SDIR = src
+ODIR = obj
 TDIR = test
 DDIR = doc
 
-# Use pattern substitution for created filenames
-OBJS = $(patsubst %.c, %.o, $(SRCS))
-TESTS = $(patsubst %.c, %_test, $(SRCS))
+# Use wild cards to get a list of sources
+SRCS = $(wildcard $(SDIR)/*.c)
+TEST_SRCS = $(wildcard $(TDIR)/*_test.c)
+# Use pattern substitution to get list of objects and dependencies
+OBJS = $(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(SRCS))
+DEPS = $(patsubst $(SDIR)/%.c, $(ODIR)/%.d, $(SRCS))
+TESTS = $(patsubst %.c, %, $(TEST_SRCS)) 
+TEST_OBJS = $(patsubst %.c, %.o, $(TEST_SRCS))
+TEST_DEPS = $(patsubst %.c, %.d, $(TEST_SRCS))
 
 # Choose the C, C++, and Fortran compiler
 CC=gcc
@@ -51,26 +52,51 @@ CFLAGS += -O0
 #LIBS += -lnlopt
 LIBS += -lm
 
-.PHONEY: all clean test docs
-
-$(PROGRAM): $(patsubst %, $(ODIR)/%, $(OBJS))
+# Default rule compiles the program from all object files
+$(PROGRAM): $(OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(LIBS) $^ -o $@
 
-$(ODIR)/%.o: $(SDIR)/%.c $(patsubst %, $(SDIR)/%, $(DEPS))
+# Include the dependencies
+include $(DEPS)
+include $(TEST_DEPS)
+
+# Implicit rule for automatic dependency generation
+$(ODIR)/%.d: $(SDIR)/%.c
+	@set -e; rm -f $@; \
+	 $(CC) -MM $(CPPFLAGS) $< > $@.$$$$; \
+	 sed 's,\($*\)\.o[ :]*,$(ODIR)/\1.o $@ : ,g' < $@.$$$$ > $@; \
+	 rm -f $@.$$$$
+
+# Implicit rule for object generation
+$(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
-$(TDIR)/%_test: $(SDIR)/%_test.c %(SDIR)/%.c \
-                $(patsubst %, $(SDIR)/%, $(DEPS))
-	$(CC) -c $(CFLAGS) $(LDFLAGS) $(LIBS) $^ -o $@
-	$@
+# Implicit rule for test dependency generation
+$(TDIR)/%_test.d: $(TDIR)/%_test.c
+	@set -e; rm -f $@; \
+	 $(CC) -MM $(CPPFLAGS) $< > $@.$$$$; \
+	 sed 's,\($*\)_test\.o[ :]*,$(TDIR)/\1_test.o $@ : ,g' < $@.$$$$ > $@; \
+	 rm -f $@.$$$$
 
-all: test docs $(PROGRAM)
+# Implicit rule for test generation and running
+$(TDIR)/%_test: $(TDIR)/%_test.o
+	@$(CC) $(CFLAGS) $(LDFLAGS) $(LIBS) $< -o $@
+	@./$@
 
+# Implicit rule for test object generation
+$(TDIR)/%_test.o: $(TDIR)/%_test.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+.PHONY: all clean test docs
+
+# Run the test, build the program, make the docs
+all: test $(PROGRAM) docs
+
+# 
 clean:
-	rm $(ODIR)/*.o $(PROGRAM)
+	rm $(ODIR)/* $(TDIR)/*_test $(TDIR)/*.o $(TDIR)/*.d $(PROGRAM)
 
-test: $(patsubstr %, $(TDIR)/%, $(TESTS⁄))
+test: $(TESTS)
 
-docs: $(patsubst %, $(SDIR)/%, $(SRCS)) \
-      $(patsubst %, $(SDIR)/%, $(DEPS))
-    doxygen
+#docs: 
+#    doxygen
