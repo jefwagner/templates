@@ -1,0 +1,66 @@
+\documentclass[10pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage[letterpaper,margin=1in]{geometry}
+
+\newcommand{\dif}{\text{d}}
+\renewcommand{\vec}[1]{\bm{#1}}
+
+\begin{document}
+\title{Example Document}
+\author{Jef Wagner}
+\maketitle
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tempor,
+justo vitae convallis interdum, nisi nisl dictum sem, in facilisis
+turpis tellus sit amet sapien. Aliquam ipsum arcu, laoreet sagittis
+commodo varius, vehicula quis leo. Phasellus accumsan ultrices nunc,
+sed feugiat metus vestibulum eu. 
+
+\begin{subequations}
+\begin{align}
+  \nabla \cdot \vec{D} &= \rho \\
+  \nabla \times \vec{H} - \frac{\partial}{\partial t} 
+    \vec{D} &= \vec{j}(x) \\
+    \nabla \cdot \vec{B} &= 0 \\
+    \nabla \times \vec{E} + \frac{\partial}{\partial t} B &= 0
+\end{align}
+\end{subequations}
+
+Morbi in est elit. Nunc in quam porttitor, semper felis vitae, auctor
+massa. Nullam tristique sollicitudin interdum. Aenean ultrices ac
+mauris quis consequat. Phasellus vitae eros euismod, scelerisque
+massa ac, placerat risus. Vivamus rutrum pulvinar leo nec laoreet.
+Donec quis risus ut neque adipiscing ullamcorper et quis magna.
+
+\begin{figure}[htb]
+  \begin{center}
+  \includegraphics[width=0.5\textwidth]{figures/EM_Spectrum_Properties.png}
+  \caption{Sed vehicula magna felis, in condimentum nunc sollicitudin
+    ac. Duis porta felis velit, non molestie nulla egestas in. Nullam
+    in faucibus velit.}
+  \end{center}
+\end{figure}
+
+Praesent convallis ipsum non blandit fermentum. Nullam et neque
+mattis arcu semper malesuada. Proin sit amet dignissim velit. Nunc
+sollicitudin lacus eu arcu malesuada, ac vehicula arcu feugiat. Sed
+semper accumsan rhoncus. Donec consectetur, velit sed pharetra
+mattis, erat mi laoreet eros, at commodo massa turpis quis mauris.
+Curabitur mollis dui ut blandit condimentum. 
+
+\begin{equation}
+  \nabla^2 \phi(\vec{x}) = 0.
+\end{equation}
+
+Nullam pulvinar pellentesque rutrum. Praesent magna lectus, viverra
+non odio laoreet, convallis ultrices tellus. Fusce malesuada pharetra
+ante, eget luctus massa viverra a. Proin diam ipsum, rhoncus vitae
+nunc lobortis, pellentesque interdum sapien. Praesent dapibus
+tincidunt tortor, in aliquet metus. Nam sit amet magna eu nisi
+condimentum pretium eget eu diam. Nunc in odio interdum, varius elit
+luctus, aliquet tortor. 
+
+\end{document}

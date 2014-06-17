@@ -1,10 +1,9 @@
 ######################################################################
 # General Makefile
 #
-# This is a general makefile for a c project. You need to fill in the
-# program name, the source files, and the dependency (header or
-# resource) files. It should work with very minor changes in the
-# pattern substitution for c++ and fortran files.
+# This is a general makefile for a medium sized c project. The source
+# files, object files, test cases, and documentation are all in
+# separate files.
 ######################################################################
 # Name of the program
 PROGRAM = medium
@@ -31,25 +30,30 @@ CXX=g++
 FC=gfortran
 
 # Options for finding external libraries
+# For the Mac OSX macports default location
 LDFLAGS += -L/opt/local/lib
 CFLAGS += -I/opt/local/include
+# For the default Linux locations
 #LDFLAGS += -L/usr/local/lib
 #LDFLAGS += -L/usr/lib
 #CFLAGS += -I/usr/local/include
 #CFLAGS += -I/usr/include
-CFLAGS += -I.
 
 # Additional options
+# Give all warnings
 CFLAGS += -Wall
+# Options for debugging
 CFLAGS += -ggdb
 CFLAGS += -O0
+# Options for optimized code
 #CFLAGS += -O3
 
 # Libraries
-#LIBS += -lgsl
-#LIBS += -lgslcblas
+# The GNU Scientific Library
+#LIBS += -lgsl -lgslcblas
+# Altas flavored lapack and BLAS
 #LIBS += -llapack -lptcblas -latlas
-#LIBS += -lnlopt
+# In c we alwasy need the default math library
 LIBS += -lm
 
 # Default rule compiles the program from all object files
@@ -69,7 +73,7 @@ $(ODIR)/%.d: $(SDIR)/%.c
 
 # Implicit rule for object generation
 $(ODIR)/%.o: $(SDIR)/%.c
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 # Implicit rule for test dependency generation
 $(TDIR)/%_test.d: $(TDIR)/%_test.c
@@ -85,16 +89,16 @@ $(TDIR)/%_test: $(TDIR)/%_test.o
 
 # Implicit rule for test object generation
 $(TDIR)/%_test.o: $(TDIR)/%_test.c
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 .PHONY: all clean test docs
 
 # Run the test, build the program, make the docs
-all: test $(PROGRAM) docs
 
 # 
 clean:
-	rm $(ODIR)/* $(TDIR)/*_test $(TDIR)/*.o $(TDIR)/*.d $(PROGRAM)
+	rm -f $(ODIR)/* $(PROGRAM)
+	rm -f $(TDIR)/*_test $(TDIR)/*.o $(TDIR)/*.d
 
 test: $(TESTS)
 
